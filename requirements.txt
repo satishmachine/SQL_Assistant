@@ -1,0 +1,9 @@
+streamlit
+sqlalchemy
+python-dotenv
+pymysql
+psycopg2
+speechrecognition
+PyAudio
+google-api-python-client
+plotly
