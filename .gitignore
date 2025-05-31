@@ -1,2 +1,3 @@
 .env
 sql_assis
+__pycache__
