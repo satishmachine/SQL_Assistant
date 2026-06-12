@@ -8,3 +8,4 @@ PyAudio
 google-api-python-client
 plotly
 requests
+psycopg2-binary
