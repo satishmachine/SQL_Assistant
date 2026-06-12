@@ -1,249 +1,267 @@
 # 🧠 SQL-Powered Data Retrieval Assistant
 
-A multilingual voice-enabled SQL assistant that converts natural language queries into SQL statements using AI and provides interactive data visualizations.
+A multilingual, voice-enabled SQL assistant that converts natural language queries into SQL statements using the **EURI LLM API** and provides interactive data visualizations — all through a clean **Streamlit** web interface.
+
+---
 
 ## 🌟 Features
 
-- **Multilingual Speech Recognition**: Supports 12+ languages including English, Hindi, Spanish, French, German, Chinese, Arabic, Bengali, Japanese, Tamil, Telugu, and Marathi
-- **Natural Language to SQL**: Converts spoken or typed queries into SQL using  LLM API
-- **Interactive Data Visualization**: Generate bar charts, line charts, pie charts, and scatter plots from query results
-- **Database Connectivity**: Supports multiple database types (MySQL, PostgreSQL, SQLite, etc.)
-- **Real-time Voice Input**: Voice-to-text conversion with Google Speech Recognition
-- **Streamlit Web Interface**: User-friendly web application
+| Feature | Description |
+|---|---|
+| 🎙️ **Multilingual Speech Recognition** | Supports 12+ languages via Google Speech Recognition |
+| 🤖 **Natural Language → SQL** | Uses EURI LLM (`gpt-4.1-nano`) to generate SQL from plain English (or any supported language) |
+| 📊 **Interactive Visualizations** | Bar, Line, Pie, and Scatter charts powered by Plotly |
+| 🗄️ **Multi-Database Support** | Works with PostgreSQL, MySQL, SQLite, SQL Server, and more |
+| 🔐 **Secure Config** | API keys and DB credentials stored in `.env` — never hardcoded |
+| 🌐 **Streamlit Web App** | Clean, browser-based interface — no frontend setup needed |
 
-## 🛠️ Prerequisites
+---
 
-- Python 3.10
-- Microphone (for voice input)
-- Database connection (MySQL, PostgreSQL, SQLite, etc.)
-- API key for LLM services
+## 🛠️ Tech Stack
+
+- **Frontend / App**: [Streamlit](https://streamlit.io/)
+- **LLM API**: [EURI AI](https://euron.one) — OpenAI-compatible REST API
+- **Database ORM**: [SQLAlchemy](https://www.sqlalchemy.org/)
+- **Speech Recognition**: [SpeechRecognition](https://pypi.org/project/SpeechRecognition/) + Google Speech API
+- **Visualization**: [Plotly Express](https://plotly.com/python/plotly-express/)
+- **HTTP Client**: [Requests](https://docs.python-requests.org/)
+
+---
+
+## 📋 Prerequisites
+
+- Python **3.10+**
+- A working **microphone** (for voice input)
+- A **database** accessible via connection URI
+- A valid **EURI API key** from [euron.one](https://euron.one)
+
+---
 
 ## 📦 Installation
 
 ### 1. Clone the Repository
+
 ```bash
 git clone <repository-url>
-cd SQL_LLM_Project
+cd "SQL_LLM_Project - Copy"
 ```
 
-### 2. Create Virtual Environment (Recommended)
-```bash
-# Create virtual environment
-python -m venv 
+### 2. Create & Activate a Virtual Environment
 
-# Activate virtual environment
-# On Windows:
-sql_assis\Scripts\activate
-# On macOS/Linux:
-source sql_assis/bin/activate
+```bash
+# Create
+python -m venv .venv
+
+# Activate — Windows
+.venv\Scripts\activate
+
+# Activate — macOS / Linux
+source .venv/bin/activate
 ```
 
 ### 3. Install Dependencies
+
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. Additional Setup for Speech Recognition
+### 4. PyAudio Setup (required for voice input)
 
-#### Windows:
+#### Windows
 ```bash
 pip install pyaudio
 ```
 
-#### macOS:
+#### macOS
 ```bash
 brew install portaudio
 pip install pyaudio
 ```
 
-#### Linux (Ubuntu/Debian):
+#### Linux (Ubuntu / Debian)
 ```bash
-sudo apt-get install python3-pyaudio
-# or
 sudo apt-get install portaudio19-dev python3-all-dev
 pip install pyaudio
 ```
 
+---
+
 ## ⚙️ Configuration
 
-### 1. Environment Variables
+### 1. Create a `.env` File
 
-Create a `.env` file in the project root directory:
+Copy the template below and save it as `.env` in the project root:
 
 ```env
-#LLM API Configuration
-API_KEY=your_LLM_api_key_here
+# EURI LLM API Key — get yours at https://euron.one
+EURI_API_KEY=your_euri_api_key_here
 
-# Database Configuration
+# Database connection string (see examples below)
 DATABASE_URI=your_database_connection_string_here
 ```
 
+> ⚠️ **Never commit your `.env` file.** It is already listed in `.gitignore`.
+
 ### 2. Database URI Examples
 
-Choose the appropriate connection string for your database:
+| Database | Connection String |
+|---|---|
+| **PostgreSQL** | `postgresql://user:password@host:5432/dbname?sslmode=require` |
+| **MySQL** | `mysql+pymysql://user:password@localhost:3306/dbname` |
+| **SQLite** | `sqlite:///path/to/database.db` |
+| **SQL Server** | `mssql+pyodbc://user:password@server/db?driver=ODBC+Driver+17+for+SQL+Server` |
 
-#### MySQL:
-```
-DATABASE_URI=mysql+pymysql://username:password@localhost:3306/database_name
-```
+### 3. Model & API Endpoint (`config.py`)
 
-#### PostgreSQL:
-```
-DATABASE_URI=postgresql+psycopg2://username:password@localhost:5432/database_name
-```
+These are set automatically — no manual edits needed:
 
-#### SQLite:
-```
-DATABASE_URI=sqlite:///path/to/your/database.db
-```
-
-#### SQL Server:
-```
-DATABASE_URI=mssql+pyodbc://username:password@server:port/database?driver=ODBC+Driver+17+for+SQL+Server
+```python
+EURI_API_URL = "https://api.euron.one/api/v1/euri/chat/completions"
+MODEL_NAME   = "gpt-4.1-nano"
 ```
 
+---
 
+## 🚀 Running the App
 
-## 🚀 Usage
-
-### 1. Start the Application
 ```bash
 streamlit run app.py
 ```
 
-### 2. Access the Web Interface
-Open your browser and navigate to:
+Then open your browser at:
+
 ```
 http://localhost:8501
 ```
 
-### 3. Using the Assistant
+---
 
-1. **Select Language**: Choose your preferred language for speech recognition
-2. **Input Query**: 
-   - Click "🎤 Start Listening" to speak your query
-   - Or type your question in the text input
-3. **View Results**: 
-   - See the generated SQL query
-   - View query results in a data table
-   - Create interactive visualizations
+## 🖥️ How to Use
 
-### 4. Example Queries
+1. **Choose a language** — select from the dropdown (English, Hindi, Spanish, etc.)
+2. **Ask a question**:
+   - Click **🎤 Start Listening** and speak your query, OR
+   - Type your question in the text box
+3. **View the generated SQL** — displayed as a syntax-highlighted code block
+4. **Explore results** — query results appear as an interactive data table
+5. **Visualize** — pick a chart type and select columns to plot
 
-- "Show me all customers from New York"
-- "What are the top 5 selling products?"
-- "Find the average salary by department"
-- "List orders placed in the last month"
+### Example Queries
+
+```
+Show me all customers from New York
+What are the top 5 selling products?
+Find the average salary by department
+List all orders placed in the last 30 days
+How many users signed up each month?
+```
+
+---
 
 ## 📁 Project Structure
 
 ```
-SQL_LLM_Project/
-├── app.py                 # Main Streamlit application
-├── config.py             # Configuration settings
-├── utills.py             # Utility functions
-├── prompt_template.txt   # LLM prompt template
-├── requirements.txt      # Python dependencies
-├── .env                  # Environment variables (create this)
-├── .gitignore           # Git ignore file
-└── README.md            # This file
+SQL_LLM_Project - Copy/
+│
+├── app.py                 # Main Streamlit application (UI + orchestration)
+├── utills.py              # Core logic: schema extraction, LLM call, SQL execution
+├── config.py              # API URL, model name, DB URI loaded from env
+├── prompt_template.txt    # LLM system prompt template ({schema}, {question})
+├── requirements.txt       # Python package dependencies
+├── pyproject.toml         # Project metadata
+├── .env                   # 🔒 Your secrets (create this — never commit!)
+├── .gitignore             # Excludes .env, .venv, __pycache__, etc.
+├── LICENSE                # MIT License
+└── README.md              # This file
 ```
 
-## 🔧 Configuration Files
-
-### config.py
-Contains API endpoints and model configuration:
-- EURI API URL: `https://api.euron.one/api/v1/euri/alpha/chat/completions`
-- Model: `gpt-4.1-nano`
-
-### prompt_template.txt
-Template for generating SQL queries from natural language input.
+---
 
 ## 🎯 Supported Languages
 
-- English (US)
-- Hindi (India)
-- Spanish
-- French
-- German
-- Chinese (Mandarin)
-- Arabic
-- Bengali
-- Japanese
-- Tamil
-- Telugu
-- Marathi
+| Language | Code |
+|---|---|
+| English (US) | `en-US` |
+| Hindi (India) | `hi-IN` |
+| Spanish | `es-ES` |
+| French | `fr-FR` |
+| German | `de-DE` |
+| Chinese (Mandarin) | `zh-CN` |
+| Arabic | `ar-SA` |
+| Bengali | `bn-IN` |
+| Japanese | `ja-JP` |
+| Tamil | `ta-IN` |
+| Telugu | `te-IN` |
+| Marathi | `mr-IN` |
 
-## 📊 Visualization Options
+---
 
-- **Bar Chart**: Compare categorical data
-- **Line Chart**: Show trends over time
-- **Pie Chart**: Display proportional data
-- **Scatter Plot**: Explore relationships between variables
+## 📊 Visualization Types
+
+| Chart | Best For |
+|---|---|
+| **Bar Chart** | Comparing categories (e.g., sales by region) |
+| **Line Chart** | Trends over time (e.g., monthly revenue) |
+| **Pie Chart** | Proportional breakdowns (e.g., market share) |
+| **Scatter Plot** | Correlations between two numeric columns |
+
+---
 
 ## 🔍 Troubleshooting
 
-### Common Issues
+### 404 Error from EURI API
+- **Cause**: Stale or incorrect API URL.
+- **Fix**: Ensure `config.py` uses `https://api.euron.one/api/v1/euri/chat/completions` (no `/alpha/` segment).
+- Restart Streamlit after any code changes: `Ctrl+C` → `streamlit run app.py`.
 
-1. **Microphone not working**:
-   - Check microphone permissions
-   - Ensure PyAudio is properly installed
-   - Test microphone with other applications
+### API Key / 401 Unauthorized
+- Verify `EURI_API_KEY` in your `.env` matches the key from [euron.one](https://euron.one).
+- Confirm `.env` is in the **same directory** as `app.py`.
 
-2. **Database connection errors**:
-   - Verify DATABASE_URI format
-   - Check database credentials
-   - Ensure database server is running
+### Database Connection Errors
+- Double-check your `DATABASE_URI` format (see examples above).
+- Ensure the database server is reachable and credentials are correct.
+- For PostgreSQL (Neon, Supabase, etc.) make sure `?sslmode=require` is appended.
 
-3. **EURI API errors**:
-   - Verify API key is correct
-   - Check internet connection
-   - Ensure API quota is not exceeded
+### Microphone / Speech Recognition Issues
+- Check OS microphone permissions for the terminal / Python process.
+- Ensure PyAudio is installed correctly for your OS (see Installation section).
+- Speak clearly in a quiet environment; select the correct language from the dropdown.
 
-4. **Speech recognition errors**:
-   - Speak clearly and at moderate pace
-   - Ensure quiet environment
-   - Check selected language matches spoken language
-
-### Dependencies Issues
-
-If you encounter issues with specific packages:
-
+### Streamlit Showing Old Code After Changes
 ```bash
-# For speech recognition issues
-pip install --upgrade SpeechRecognition
-
-# For audio issues
-pip install --upgrade pyaudio
-
-# For database connectivity
-pip install --upgrade sqlalchemy pymysql psycopg2
+# Stop the server (Ctrl+C), then clear Python cache and restart:
+Remove-Item -Recurse -Force __pycache__   # Windows PowerShell
+streamlit run app.py
 ```
+
+### Package-Level Fixes
+```bash
+pip install --upgrade streamlit sqlalchemy psycopg2 SpeechRecognition pyaudio plotly requests
+```
+
+---
 
 ## 🤝 Contributing
 
 1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
+2. Create a feature branch: `git checkout -b feature/my-feature`
+3. Commit your changes: `git commit -m "Add my feature"`
+4. Push and open a Pull Request
+
+---
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the **MIT License** — see [LICENSE](LICENSE) for details.
 
-## 🆘 Support
+---
 
-For support and questions:
-1. Check the troubleshooting section
-2. Review the configuration settings
-3. Ensure all dependencies are properly installed
-4. Verify environment variables are set correctly
+## 🔮 Roadmap
 
-## 🔮 Future Enhancements
-
-- Support for more database types
-- Advanced visualization options
-- Query history and favorites
-- Multi-table join query support
-- Export functionality for results and visualizations
+- [ ] Query history & saved favourites
+- [ ] Multi-table JOIN query support
+- [ ] Export results as CSV / Excel
+- [ ] Advanced chart customisation
+- [ ] Support for more LLM providers (OpenAI, Gemini, Ollama)
+- [ ] Authentication layer for multi-user deployments

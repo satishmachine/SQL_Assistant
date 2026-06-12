@@ -1,3 +1,165 @@
+# =============================================================================
+# SECRETS & CREDENTIALS  ← most important — never commit these
+# =============================================================================
 .env
-sql_assis
-__pycache__
+.env.*
+*.env
+secrets.toml
+*.pem
+*.key
+*.p12
+*.pfx
+
+
+# =============================================================================
+# PYTHON
+# =============================================================================
+
+# Byte-compiled / optimised / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+*.egg
+.eggs/
+MANIFEST
+wheels/
+pip-wheel-metadata/
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+sql_assis/
+.Python
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage
+.tox/
+.nox/
+.coverage
+.coverage.*
+htmlcov/
+.pytest_cache/
+*.cover
+*.py,cover
+nosetests.xml
+coverage.xml
+
+# Type checkers
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pytype/
+.pyre/
+
+# pyenv
+.python-version
+
+# pipenv / poetry / uv
+Pipfile.lock
+poetry.lock
+# uv.lock is intentionally kept (reproducible installs) — remove line below to commit it
+# uv.lock
+
+
+# =============================================================================
+# STREAMLIT
+# =============================================================================
+.streamlit/secrets.toml   # Streamlit secrets file — contains API keys
+# Keep .streamlit/config.toml if you want to share theme/server settings
+
+
+# =============================================================================
+# JUPYTER / IPYTHON
+# =============================================================================
+.ipynb_checkpoints/
+*.ipynb
+
+
+# =============================================================================
+# DATABASE FILES
+# =============================================================================
+*.db
+*.sqlite
+*.sqlite3
+*.sql.bak
+
+
+# =============================================================================
+# LOGS & TEMP FILES
+# =============================================================================
+*.log
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+logs/
+tmp/
+temp/
+
+
+# =============================================================================
+# OS-GENERATED FILES
+# =============================================================================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# Linux
+*~
+
+
+# =============================================================================
+# IDEs & EDITORS
+# =============================================================================
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# PyCharm / JetBrains
+.idea/
+*.iml
+*.iws
+
+# Spyder
+.spyderproject.cfg
+.spyproject/
+
+# Rope
+.ropeproject/
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+
+# =============================================================================
+# MISC
+# =============================================================================
+*.csv          # Exported query results — usually don't need to be committed
+*.xlsx
+*.json.bak
+node_modules/  # In case any JS tooling is added later

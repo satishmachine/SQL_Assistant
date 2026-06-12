@@ -7,3 +7,4 @@ speechrecognition
 PyAudio
 google-api-python-client
 plotly
+euriai

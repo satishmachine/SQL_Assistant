@@ -1,7 +1,8 @@
 import requests
-from sqlalchemy import text,MetaData
-from config import EURI_API_KEY,EURI_API_URL , MODEL_NAME
-
+from sqlalchemy import text, MetaData
+from config import EURI_API_KEY, EURI_API_URL, MODEL_NAME
+from dotenv import load_dotenv
+load_dotenv()
 
 def get_db_schema(engine):
     meta = MetaData()
@@ -12,30 +13,24 @@ def get_db_schema(engine):
     return schema.strip()
 
 
-
-def call_euri_llm(prompt):
+def call_euri_llm(prompt: str) -> str:
     headers = {
         "Authorization": f"Bearer {EURI_API_KEY}",
         "Content-Type": "application/json"
     }
-
     payload = {
         "model": MODEL_NAME,
-        "messages": [
-            {
-                "role": "user",
-                "content": prompt
-            }
-        ],
+        "messages": [{"role": "user", "content": prompt}],
         "temperature": 0.3,
         "max_tokens": 300
     }
-
     response = requests.post(EURI_API_URL, headers=headers, json=payload)
-    response.raise_for_status()  # raise exception on error
+    response.raise_for_status()
     return response.json()["choices"][0]["message"]["content"].strip()
+
 
 def execute_sql(engine, query):
     with engine.connect() as conn:
         result = conn.execute(text(query))
         return result.fetchall(), result.keys()
+

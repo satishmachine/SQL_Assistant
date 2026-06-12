@@ -1,0 +1,18 @@
+[project]
+name = "sql-llm-project-copy"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "euriai>=1.0.32",
+    "google-api-python-client>=2.197.0",
+    "plotly>=6.8.0",
+    "psycopg2>=2.9.12",
+    "pyaudio>=0.2.14",
+    "pymysql>=1.2.0",
+    "python-dotenv>=1.2.2",
+    "speechrecognition>=3.16.1",
+    "sqlalchemy>=2.0.50",
+    "streamlit>=1.58.0",
+]
