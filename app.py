@@ -1,10 +1,16 @@
-# my experiment for the sql assistent
+# SQL-Powered Data Retrieval Assistant
 import streamlit as st
-import speech_recognition as sr
 from sqlalchemy import create_engine
 from config import DATABASE_URI
 from utills import get_db_schema, call_euri_llm, execute_sql
 import plotly.express as px
+
+# Try to import speech recognition — may not be available on cloud deployments
+try:
+    import speech_recognition as sr
+    VOICE_AVAILABLE = True
+except (ImportError, OSError):
+    VOICE_AVAILABLE = False
 
 st.set_page_config(page_title="SQL Assistant", layout="wide")
 st.title("🧠 SQL-Powered Data Retrieval Assistant")
@@ -12,7 +18,6 @@ st.title("🧠 SQL-Powered Data Retrieval Assistant")
 # ----------------------------
 # Step 1: Choose Input Language
 # ----------------------------
-st.subheader("🌐 Choose Language for Speech Recognition")
 language_map = {
     "English (US)": "en-US",
     "Hindi (India)": "hi-IN",
@@ -27,29 +32,38 @@ language_map = {
     "Telugu": "te-IN",
     "Marathi": "mr-IN"
 }
-selected_language = st.selectbox("Choose a language", list(language_map.keys()))
-language_code = language_map[selected_language]
 
 # ----------------------------
-# Step 2: Speech Input
+# Step 2: Input — voice or text
 # ----------------------------
-st.subheader("🎙️ Speak Your SQL Query")
 nl_query = ""
-if st.button("🎤 Start Listening"):
-    recognizer = sr.Recognizer()
-    with sr.Microphone() as source:
-        st.info(f"Listening in {selected_language}... Speak now.")
-        audio = recognizer.listen(source, timeout=6)
 
-    try:
-        nl_query = recognizer.recognize_google(audio, language=language_code)
-        st.success(f"You said: {nl_query}")
-    except sr.UnknownValueError:
-        st.error("Sorry, I couldn't understand the audio.")
-    except sr.RequestError as e:
-        st.error(f"Speech Recognition API error: {e}")
+if VOICE_AVAILABLE:
+    st.subheader("🌐 Choose Language for Speech Recognition")
+    selected_language = st.selectbox("Choose a language", list(language_map.keys()))
+    language_code = language_map[selected_language]
+
+    st.subheader("🎙️ Speak or Type Your Query")
+    if st.button("🎤 Start Listening"):
+        recognizer = sr.Recognizer()
+        try:
+            with sr.Microphone() as source:
+                st.info(f"Listening in {selected_language}... Speak now.")
+                audio = recognizer.listen(source, timeout=6)
+            nl_query = recognizer.recognize_google(audio, language=language_code)
+            st.success(f"You said: {nl_query}")
+        except OSError:
+            st.warning("⚠️ No microphone detected. Please use the text input below.")
+        except sr.UnknownValueError:
+            st.error("Sorry, I couldn't understand the audio.")
+        except sr.RequestError as e:
+            st.error(f"Speech Recognition API error: {e}")
+    else:
+        nl_query = st.text_input("Or type your question here:")
 else:
-    nl_query = st.text_input("Or type your question here:")
+    st.subheader("💬 Type Your Query")
+    st.info("ℹ️ Voice input is not available in this environment. Use the text box below.")
+    nl_query = st.text_input("Type your question here:")
 
 # ----------------------------
 # Step 3: Process Natural Language Query
